@@ -1,0 +1,27 @@
+Student unit selection system.
+
+Rules:
+1- Student
+2- Teacher
+3- university Staff
+4- Superuser
+
+
+User permissions:
+
+1- Student:
+- Login by phonenumber and 5 digits pincode
+- Select lessons limitedly
+- Students can not submit! They were added just by Staff
+- Update profile
+- remove lessens - limited based on date
+
+2 - Teacher:
+- Add student result test
+- Remove student from own lesson - lemited based on date
+
+
+3 - Staff:
+- Submit student uniquely
+- Submit teacher uniquely
+- 
