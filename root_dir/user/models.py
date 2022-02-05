@@ -1,4 +1,5 @@
 ## for creating custom user table
+from pyexpat import model
 from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager,
                                         PermissionsMixin)
 from django.db import models
@@ -46,3 +47,30 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return str(self.mobile)
+
+
+class LessonModel(models.Model):
+    name = models.CharField(max_length=20, verbose_name='عنوان')
+    credit = models.PositiveSmallIntegerField()
+    code = models.CharField(max_length=6, null=True, blank=True,verbose_name='سریال')
+
+    class Meta:
+        verbose_name = 'درس'
+        verbose_name_plural = 'دروس'
+        db_table = 'user_lesson'
+
+    def __str__(self):
+        return self.name
+
+
+class ClassModel(models.Model):
+    name = models.OneToOneField(LessonModel, on_delete=models.CASCADE, primary_key=True, verbose_name='کلاسهای دروس')
+    teacher = models.ForeignKey(User, on_delete=models.CASCADE, related_name='class_list', verbose_name='استاد')
+    student = models.ManyToManyField(User, related_name='lesson_list', verbose_name='دانشجو')
+    class Meta:
+        verbose_name = 'درس'
+        verbose_name_plural = 'دروس'
+        db_table = 'user_class'
+
+    def __str__(self):
+        return self.name
