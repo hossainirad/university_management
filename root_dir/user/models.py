@@ -31,12 +31,22 @@ class UserManager(BaseUserManager):
         return user
 
 
+
+
 class User(AbstractBaseUser, PermissionsMixin):
+    """
+    access roles:
+    1 ==> staff
+    2 ==> student
+    3 ==> teacher
+    4 ==> superuser
+    """
+
     is_active = models.BooleanField(default=True, verbose_name='فعال؟') 
     is_admin = models.BooleanField(default=False, verbose_name='کارمند؟') 
     name = models.CharField(max_length=20, null=True, blank=True, verbose_name='نام')
     mobile = PhoneNumberField(unique=True, verbose_name='شماره همراه')
-    access = models.PositiveSmallIntegerField()
+    access = models.PositiveSmallIntegerField(default=1)
 
     USERNAME_FIELD = 'mobile'
     objects = UserManager()
@@ -47,6 +57,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return str(self.mobile)
+
+    @property
+    def is_staff(self):
+        "Is the user a member of staff?"
+        # Simplest possible answer: All admins are staff
+        return self.is_admin
 
 
 class LessonModel(models.Model):
@@ -68,9 +84,9 @@ class ClassModel(models.Model):
     teacher = models.ForeignKey(User, on_delete=models.CASCADE, related_name='class_list', verbose_name='استاد')
     student = models.ManyToManyField(User, related_name='lesson_list', verbose_name='دانشجو')
     class Meta:
-        verbose_name = 'درس'
-        verbose_name_plural = 'دروس'
+        verbose_name = 'کلاس'
+        verbose_name_plural = 'کلاس ها'
         db_table = 'user_class'
 
     def __str__(self):
-        return self.name
+        return str(self.name)
