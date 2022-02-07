@@ -10,3 +10,8 @@ class ShowClassesSerializer(serializers.Serializer):
     teacher = serializers.CharField()
     student = serializers.CharField()
     
+
+class UpdateClassesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ClassModel
+        fields = ['name']
