@@ -24,10 +24,10 @@ class UpdateClassNameAPIView(UpdateAPIView):
     serializer_class = UpdateClassesSerializer
     queryset = Class.objects.all()
 
-    def get_object(self):
-        class_id = self.kwargs.get('pk')
-        obj = Class.objects.get(name_id=class_id)
-        return obj
+    # def get_object(self):
+    #     class_id = self.kwargs.get('pk')
+    #     obj = Class.objects.get(name_id=class_id)
+    #     return obj
 
-    def update(self, request, *args, **kwargs):
-        return super().update(request, *args, **kwargs)
+    # def update(self, request, *args, **kwargs):
+    #     return super().update(request, *args, **kwargs)
