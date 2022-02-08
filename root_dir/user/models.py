@@ -19,7 +19,8 @@ class UserManager(BaseUserManager):
         return user
 
     def validate_password(self, value: str):
-        return make_password(value)
+       return make_password(value)
+        
 
     def create_superuser(self, mobile, password=None):
         """Creates and saves a new super user"""
