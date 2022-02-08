@@ -29,6 +29,7 @@ class ClassModelAdmin(admin.ModelAdmin):
     list_display    = [
         'name',
         'teacher',
+        'created_at',
     ]
 
 admin.site.register(ClassModel, ClassModelAdmin)

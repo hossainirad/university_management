@@ -1,9 +1,11 @@
 from django.contrib import admin
-from django.urls import path,include
-from .views import ShowClassesAPIView, UpdateClassNameAPIView
+from django.urls import include, path
 
+from .views import (DeleteClassAPIView, ShowClassesAPIView,
+                    UpdateClassNameAPIView)
 
 urlpatterns = [
     path('classes/', ShowClassesAPIView.as_view()),
-    path('update_class/<pk>/', UpdateClassNameAPIView.as_view()),
+    path('updateClass/<pk>/', UpdateClassNameAPIView.as_view()),
+    path('deleteClass/<pk>/', DeleteClassAPIView.as_view()),
 ]
