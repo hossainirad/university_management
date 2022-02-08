@@ -6,6 +6,7 @@ from django.db import models
 from django.utils import timezone
 from phonenumber_field.modelfields import PhoneNumberField
 
+
 class UserManager(BaseUserManager):
     def create_user(self, mobile, password=None, **extra_fields):
         """Creates and saves a new user"""
@@ -18,8 +19,8 @@ class UserManager(BaseUserManager):
         return user
 
     def validate_password(self, value: str):
-       # return make_password(value)
-        pass
+       return make_password(value)
+        
 
     def create_superuser(self, mobile, password=None):
         """Creates and saves a new super user"""

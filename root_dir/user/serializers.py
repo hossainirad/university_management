@@ -5,7 +5,7 @@ from .models import ClassModel
 
 Class = ClassModel
 
-class ShowClassesSerializer(serializers.Serializer):
+class ShowClassesSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
     teacher = serializers.CharField()
     student = serializers.CharField()

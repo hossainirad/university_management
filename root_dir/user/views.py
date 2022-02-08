@@ -6,12 +6,11 @@ from .serializers import ShowClassesSerializer, UpdateClassesSerializer
 
 from rest_framework.generics import UpdateAPIView, RetrieveAPIView, ListAPIView
 
-Class = ClassModel
 
 class ShowClassesAPIView(ListAPIView):
 
     serializer_class = ShowClassesSerializer
-    queryset = Class.objects.all()
+    queryset = ClassModel.objects.all()
 
     # def get(self, request, *args, **kwargs):
     #     class_object = Class.objects.all()
@@ -22,7 +21,7 @@ class ShowClassesAPIView(ListAPIView):
 
 class UpdateClassNameAPIView(UpdateAPIView):
     serializer_class = UpdateClassesSerializer
-    queryset = Class.objects.all()
+    queryset = ClassModel.objects.all()
 
     # def get_object(self):
     #     class_id = self.kwargs.get('pk')
