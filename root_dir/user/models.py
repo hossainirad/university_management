@@ -1,5 +1,7 @@
 import datetime
+from django.utils import timezone
 
+from dateutil.relativedelta import relativedelta
 from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager,
                                         PermissionsMixin)
 from django.db import models
@@ -80,8 +82,7 @@ class LessonModel(models.Model):
 
 
 class ClassModel(models.Model):
-
-    name = models.OneToOneField(LessonModel, on_delete=models.CASCADE, primary_key=True, verbose_name='کلاسهای دروس')
+    name = models.OneToOneField(LessonModel, on_delete=models.CASCADE, verbose_name='کلاسهای دروس')
     teacher = models.ForeignKey(User, on_delete=models.CASCADE, related_name='class_list', verbose_name='استاد')
     student = models.ManyToManyField(User, related_name='lesson_list', verbose_name='دانشجو')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -99,9 +100,8 @@ class ClassModel(models.Model):
         return self.created_at
 
     def has_missed_deadline(self):
-        obj = self.get_object()
-        current_datetime = datetime.datetime.now()
-        if obj.get_created_at().replace(tzinfo=None) + datetime.timedelta(days=14) > current_datetime :
+        current_datetime = timezone.now()
+        if self.created_at + relativedelta(days=14) > current_datetime :
             return True
         return False
     

@@ -7,12 +7,12 @@ from .models import ClassModel, User
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = "__all__"
+        fields = ['id', 'name']
 
 class ShowClassesSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClassModel
-        fields = ['name', 'teacher', 'student', 'created_at']
+        fields = ['id', 'name', 'teacher', 'student', 'created_at']
         
     name = serializers.CharField()
     teacher = serializers.CharField()
