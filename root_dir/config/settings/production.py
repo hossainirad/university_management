@@ -121,8 +121,10 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+# just for using swagger
 LOGIN_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = '/sw'
+LOGIN_REDIRECT_URL = '/swagger'
 LOGOUT_URL = '/logout/'
 
 
