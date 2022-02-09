@@ -7,18 +7,30 @@ from .models import ClassModel, User
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = "__all__"
+        fields = ['mobile', 'access']
 
 class ShowClassesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ClassModel
-        fields = ['name', 'teacher', 'student', 'created_at']
-        
     name = serializers.CharField()
     teacher = serializers.CharField()
     student = StudentSerializer(read_only=True, many=True)
     created_at = serializers.DateTimeField()
 
+    class Meta:
+        model = ClassModel
+        fields = ['name', 'teacher', 'student', 'created_at']
+        
+    
+
+class ShowTeacherClassesSerializer(serializers.ModelSerializer):
+    name = serializers.CharField()
+    teacher = serializers.CharField()
+    student = StudentSerializer(read_only=True, many=True)
+    created_at = serializers.DateTimeField()
+
+    class Meta:
+        model = ClassModel
+        fields = ['name', 'teacher', 'student', 'created_at']
+        
 
 class UpdateClassesSerializer(serializers.ModelSerializer):
     class Meta:

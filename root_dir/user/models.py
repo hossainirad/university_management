@@ -1,10 +1,14 @@
 import datetime
+from django.utils import timezone
 
 from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager,
                                         PermissionsMixin)
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 
+
+    
+DROPLESSONDEADLINE = datetime.timedelta(days=14)
 
 class UserManager(BaseUserManager):
     def create_user(self, mobile, password=None, **extra_fields):
@@ -95,18 +99,14 @@ class ClassModel(models.Model):
     def __str__(self):
         return str(self.name)
     
-    def get_created_at(self):
-        return self.created_at
-
     def has_missed_deadline(self):
         obj = self.get_object()
-        current_datetime = datetime.datetime.now()
-        if obj.get_created_at().replace(tzinfo=None) + datetime.timedelta(days=14) > current_datetime :
+        current_datetime = timezone.now()
+        #current_datetime = datetime.datetime.now()
+        if obj.created_at.replace(tzinfo=None) + DROPLESSONDEADLINE > current_datetime :
             return True
         return False
     
-    
-
 
 
 
