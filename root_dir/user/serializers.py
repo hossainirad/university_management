@@ -7,8 +7,8 @@ from .models import ClassModel, User
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['mobile', 'access']
-
+        fields = ['id', 'name']
+        
 class ShowClassesSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
     teacher = serializers.CharField()
