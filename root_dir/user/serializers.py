@@ -9,16 +9,29 @@ class StudentSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'name']
 
+
 class ShowClassesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ClassModel
-        fields = ['id', 'name', 'teacher', 'student', 'created_at']
-        
     name = serializers.CharField()
     teacher = serializers.CharField()
     student = StudentSerializer(read_only=True, many=True)
     created_at = serializers.DateTimeField()
 
+    class Meta:
+        model = ClassModel
+        fields = ['id', 'name', 'teacher', 'student', 'created_at']
+        
+    
+
+class ShowTeacherClassesSerializer(serializers.ModelSerializer):
+    name = serializers.CharField()
+    teacher = serializers.CharField()
+    student = StudentSerializer(read_only=True, many=True)
+    created_at = serializers.DateTimeField()
+
+    class Meta:
+        model = ClassModel
+        fields = ['name', 'teacher', 'student', 'created_at']    
+    
 
 class UpdateClassesSerializer(serializers.ModelSerializer):
     class Meta:
