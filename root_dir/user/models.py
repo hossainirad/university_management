@@ -1,4 +1,4 @@
-import datetime
+from django.utils import timezone
 
 from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager,
                                         PermissionsMixin)
@@ -99,9 +99,8 @@ class ClassModel(models.Model):
         return self.created_at
 
     def has_missed_deadline(self):
-        obj = self.get_object()
-        current_datetime = datetime.datetime.now()
-        if obj.get_created_at().replace(tzinfo=None) + datetime.timedelta(days=14) > current_datetime :
+        current_datetime = timezone.now()
+        if self.created_at + relativedelta(days=14) > current_datetime :
             return True
         return False
     

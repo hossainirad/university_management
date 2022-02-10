@@ -5,10 +5,11 @@ from .models import ClassModel, User
 
 
 class StudentSerializer(serializers.ModelSerializer):
-    class Meta:
+     class Meta:
         model = User
-        fields = "__all__"
+        fields = ['id', 'name']
 
+        
 class ShowClassesSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClassModel
