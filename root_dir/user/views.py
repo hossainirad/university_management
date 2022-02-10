@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 
 from .models import ClassModel, LessonModel
 from .serializers import ShowClassesSerializer, UpdateClassesSerializer, ShowTeacherClassesSerializer
+from rest_framework import serializers
 
 User = get_user_model 
 
@@ -14,17 +15,20 @@ class ShowClassesAPIView(ListAPIView):
         
 
 class ShowTeacherClassesAPIView(ListAPIView):
+
     queryset = ClassModel.objects.all()
-    
-    def get(self, request, *args, **kwargs):
-        obj = self.get_object()
-        teacherName = obj.teacher
-        class_obj = ClassModel.objects.filter(teacher=teacherName)
-        print('################################')
-       # print(self.kwargs['pk'])
-        print('$$$$$$$$$$$$$$$$$$$$$$')
-        print(type(class_obj[0].teacher))
-        return Response('')
+    serializer_class = ShowTeacherClassesSerializer
+       
+    # def get(self, request, *args, **kwargs):
+    #     obj = self.get_object()
+    #     teacherName = obj.teacher
+    #     class_obj = ClassModel.objects.filter(teacher=teacherName)
+    #     print('################################')
+    #    # print(self.kwargs['pk'])
+    #     print('$$$$$$$$$$$$$$$$$$$$$$')
+    #     serializer_class = ShowTeacherClassesSerializer(class_obj[0])
+    #     print(type(class_obj[0]))
+    #     return Response('')
 
 
 class ShowStudentClassesAPIView(ListAPIView):

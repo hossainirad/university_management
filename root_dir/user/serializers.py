@@ -29,8 +29,8 @@ class ShowTeacherClassesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ClassModel
-        fields = ['name', 'teacher', 'student', 'created_at']
-        
+        fields = ['name', 'teacher', 'student', 'created_at']    
+    
 
 class UpdateClassesSerializer(serializers.ModelSerializer):
     class Meta:
