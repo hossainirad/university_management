@@ -8,7 +8,8 @@ class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'name']
-        
+
+
 class ShowClassesSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
     teacher = serializers.CharField()
@@ -17,7 +18,7 @@ class ShowClassesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ClassModel
-        fields = ['name', 'teacher', 'student', 'created_at']
+        fields = ['id', 'name', 'teacher', 'student', 'created_at']
         
     
 
