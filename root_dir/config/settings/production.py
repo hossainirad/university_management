@@ -156,19 +156,11 @@ SIMPLE_JWT = {
 #This is for REST API permissions
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-<<<<<<< HEAD
-        'rest_framework.permissions.IsAuthenticated',
-    ],
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-=======
        'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
        'rest_framework_simplejwt.authentication.JWTAuthentication',
        'rest_framework.authentication.SessionAuthentication',
->>>>>>> d964d03cf0658392fd5eb33e3ba2e5abf56c5130
     ],
     'DEFAULT_THROTTLE_CLASSES': [
         # 'rest_framework.throttling.AnonRateThrottle',
