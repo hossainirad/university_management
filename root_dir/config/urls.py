@@ -21,5 +21,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/', include('user.urls')),
     path('sw/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+<<<<<<< HEAD
     path('accounts/',include('django.contrib.auth.urls'), {'template_name': 'login.html'}),
+=======
+    path('accounts/', include('django.contrib.auth.urls'),{'template_name': 'login.html'}),
+>>>>>>> c6b3fb02df831d4891e7f33f26e95265b9dfb225
 ]
