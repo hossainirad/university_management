@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import ClassModel, LessonModel
-from .serializers import ShowClassesSerializer, UpdateClassesSerializer, ShowUserSerializer
+from .serializers import ShowClassesSerializer, UpdateClassesSerializer, StudentSerializer
 
 User = get_user_model()
 
@@ -14,7 +14,7 @@ class ShowClassesAPIView(ListAPIView):
 
 
 class ShowUsersAPIView(ListAPIView):
-    serializer_class = ShowUserSerializer
+    serializer_class = StudentSerializer
     queryset = User.objects.all()
     
 

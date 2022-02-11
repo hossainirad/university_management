@@ -101,7 +101,7 @@ class ClassModel(models.Model):
     
     def has_missed_deadline(self):
         current_datetime = timezone.now()
-        if self.created_at + DROPLESSONDEADLINE > current_datetime :
+        if self.created_at + relativedelta(days=14) > current_datetime :
             return True
         return False
     
