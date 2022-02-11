@@ -19,7 +19,7 @@ class StudentSerializer(serializers.ModelSerializer):
 class ShowClassesSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClassModel
-        fields = ['id', 'name', 'teacher', 'student', 'created_at']
+        fields = [ 'name', 'teacher', 'student', 'created_at']
         
 # class ShowClassesSerializer(serializers.ModelSerializer):
 #     name = serializers.CharField()
@@ -38,4 +38,3 @@ class UpdateClassesSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-   
