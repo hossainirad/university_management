@@ -1,4 +1,5 @@
 from django.utils import timezone
+from dateutil.relativedelta import relativedelta
 
 from dateutil.relativedelta import relativedelta
 from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager,
@@ -8,7 +9,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 
     
-DROPLESSONDEADLINE = datetime.timedelta(days=14)
+DROPLESSONDEADLINE = relativedelta(days=14)
 
 class UserManager(BaseUserManager):
     def create_user(self, mobile, password=None, **extra_fields):
