@@ -20,21 +20,19 @@ class ShowUserSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = ClassModel
 #         fields = [ 'name', 'teacher', 'student', 'created_at']
-        
+
+
 class ShowClassesSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
     teacher = serializers.CharField()
     student = ShowUserSerializer(read_only=True, many=True)
-    created_at = serializers.DateTimeField()
 
     class Meta:
         model = ClassModel
         fields = ['id', 'name', 'teacher', 'student', 'created_at']
-            
+
 
 class UpdateClassesSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClassModel
         fields = '__all__'
-
-

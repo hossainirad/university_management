@@ -61,6 +61,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = 'کاربران'
 
     def __str__(self):
+        if self.name:
+            return self.name
         return str(self.mobile)
 
     @property

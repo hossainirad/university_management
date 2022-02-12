@@ -1,10 +1,11 @@
+from telnetlib import STATUS
 from django.contrib.auth import get_user_model
-from rest_framework.generics import DestroyAPIView, ListAPIView, UpdateAPIView
+from rest_framework.generics import ListAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.response import Response
-from rest_framework.views import APIView
-
-from .models import ClassModel, LessonModel
-from .serializers import ShowClassesSerializer, UpdateClassesSerializer, ShowUserSerializer
+from rest_framework import serializers
+from .models import ClassModel
+from .serializers import (ShowClassesSerializer, ShowUserSerializer,
+                          UpdateClassesSerializer)
 
 User = get_user_model()
 
@@ -16,38 +17,21 @@ class ShowClassesAPIView(ListAPIView):
 class ShowUsersAPIView(ListAPIView):
     serializer_class = ShowUserSerializer
     queryset = User.objects.all()
-    
+
 
 class ShowTeacherClassesAPIView(ListAPIView):
-    queryset = ClassModel.objects.all()
-    users = User.objects.all()
-        
-    def get(self, request, *args, **kwargs):
-        teacherID = request.user.id
-        teacherClasses = list()
-        obj = ClassModel.objects.all()
-        class_obj = ClassModel.objects.filter(teacher=teacherID)
-        for i in range(0,len(class_obj)):
-            s = ShowClassesSerializer(class_obj[i])
-            teacherClasses.append(s.data)    
-        return Response(teacherClasses)
+    serializer_class = ShowClassesSerializer
 
+    def get_queryset(self):
+        qs = ClassModel.objects.filter(teacher=self.request.user)
+        return qs
 
 class ShowStudentClassesAPIView(ListAPIView):
-    queryset = ClassModel.objects.all()
-       
-    def get(self, request, *args, **kwargs):
-        studentID = request.user.id
-        studentClasses = list()
-        obj = ClassModel.objects.all()
-        for i in range(0,len(obj)):
-            s = ShowClassesSerializer(obj[i])
-            data = s.data    
-            for j in range(0, len(data['student'])):
-                if studentID == data['student'][j]['id']:
-                    studentClasses.append(data)
+    serializer_class = ShowClassesSerializer
 
-        return Response(studentClasses)            
+    def get_queryset(self):
+        qs = ClassModel.objects.filter(student=self.request.user)
+        return qs
 
 
 class UpdateClassNameAPIView(UpdateAPIView):
@@ -55,13 +39,12 @@ class UpdateClassNameAPIView(UpdateAPIView):
     queryset = ClassModel.objects.all()
 
 
-class DeleteLessonByStudentAPIView(ListAPIView):
+class DeleteLessonByStudentAPIView(DestroyAPIView):
     queryset = ClassModel.objects.all()
 
     def get(self, request, *args, **kwargs):
-        userID = request.user.id
         student_class = ClassModel.objects.get(id=int(self.kwargs['pk']))
-        student = User.objects.get(id= userID)
+        student = request.user
         student.lesson_list.remove(student_class)
         serializedClass = ShowClassesSerializer(student_class)
 
@@ -78,6 +61,9 @@ class DeleteStudentAPIView(ListAPIView):
             student = User.objects.get(id= int(self.kwargs['id']))
         except Exception as e:
             return Response("This ID doesn't exist.")
+            raise serializers.ValidationError({
+                "error_ms": "This ID doesn't exist."
+            })
         serializedClass = ShowClassesSerializer(student_class).data
         for i in range(0, len(serializedClass['student'])):
             print(len(serializedClass['student']))
@@ -92,12 +78,3 @@ class DeleteStudentAPIView(ListAPIView):
                 return Response(serializedClass.data)
 
         return Response("This student is not in the class.")
-        
-        
-
-
-
-
-
-
-
