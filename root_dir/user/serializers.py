@@ -6,30 +6,30 @@ from .models import ClassModel, User
 
 
 
-# class ShowUserSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = User
-#         fields = ['id', 'name']
-
-class StudentSerializer(serializers.ModelSerializer):
-     class Meta:
+class ShowUserSerializer(serializers.ModelSerializer):
+    class Meta:
         model = User
         fields = ['id', 'name']
 
-class ShowClassesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ClassModel
-        fields = [ 'name', 'teacher', 'student', 'created_at']
-        
-# class ShowClassesSerializer(serializers.ModelSerializer):
-#     name = serializers.CharField()
-#     teacher = serializers.CharField()
-#     student = ShowUserSerializer(read_only=True, many=True)
-#     created_at = serializers.DateTimeField()
+# class StudentSerializer(serializers.ModelSerializer):
+#      class Meta:
+#         model = User
+#         fields = ['id', 'name']
 
+# class ShowClassesSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = ClassModel
-#         fields = ['id', 'name', 'teacher', 'student', 'created_at']
+#         fields = [ 'name', 'teacher', 'student', 'created_at']
+        
+class ShowClassesSerializer(serializers.ModelSerializer):
+    name = serializers.CharField()
+    teacher = serializers.CharField()
+    student = ShowUserSerializer(read_only=True, many=True)
+    created_at = serializers.DateTimeField()
+
+    class Meta:
+        model = ClassModel
+        fields = ['id', 'name', 'teacher', 'student', 'created_at']
             
 
 class UpdateClassesSerializer(serializers.ModelSerializer):

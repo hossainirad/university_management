@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import ClassModel, LessonModel
-from .serializers import ShowClassesSerializer, UpdateClassesSerializer, StudentSerializer
+from .serializers import ShowClassesSerializer, UpdateClassesSerializer, ShowUserSerializer
 
 User = get_user_model()
 
@@ -14,18 +14,19 @@ class ShowClassesAPIView(ListAPIView):
 
 
 class ShowUsersAPIView(ListAPIView):
-    serializer_class = StudentSerializer
+    serializer_class = ShowUserSerializer
     queryset = User.objects.all()
     
 
 class ShowTeacherClassesAPIView(ListAPIView):
     queryset = ClassModel.objects.all()
     users = User.objects.all()
-
+        
     def get(self, request, *args, **kwargs):
+        teacherID = request.user.id
         teacherClasses = list()
         obj = ClassModel.objects.all()
-        class_obj = ClassModel.objects.filter(teacher=self.users[int(self.kwargs['pk'])])
+        class_obj = ClassModel.objects.filter(teacher=teacherID)
         for i in range(0,len(class_obj)):
             s = ShowClassesSerializer(class_obj[i])
             teacherClasses.append(s.data)    
@@ -36,15 +37,15 @@ class ShowStudentClassesAPIView(ListAPIView):
     queryset = ClassModel.objects.all()
        
     def get(self, request, *args, **kwargs):
+        studentID = request.user.id
         studentClasses = list()
         obj = ClassModel.objects.all()
         for i in range(0,len(obj)):
             s = ShowClassesSerializer(obj[i])
             data = s.data    
             for j in range(0, len(data['student'])):
-                if int(self.kwargs['pk']) == data['student'][j]['id']:
-                    class_obj = ClassModel.objects.filter(name=data['id'])
-                    studentClasses.append(s.data)
+                if studentID == data['student'][j]['id']:
+                    studentClasses.append(data)
 
         return Response(studentClasses)            
 
@@ -54,33 +55,49 @@ class UpdateClassNameAPIView(UpdateAPIView):
     queryset = ClassModel.objects.all()
 
 
-class DeleteLessonByStudentAPIView(DestroyAPIView):
+class DeleteLessonByStudentAPIView(ListAPIView):
     queryset = ClassModel.objects.all()
 
-    # def get(self, request, *args, **kwargs):
-    #     userClass= list()
-    #     if request.user.is_authenticated:
-    #         print('this is hereeee')
-    #         userID = request.user.id
-    #         classes = ClassModel.objects.all()
-    #         for i in range(0, len(classes)):
-    #             if classes[i].id == int(self.kwargs['pk']):
-    #                 s = ShowClassesSerializer(classes[i])
-    #                 data = s.data 
-    #                 userClass = s.data 
-    #         for i in range(0, len(userClass['student'])):
-    #             if userClass['student'][i]['id'] == userID:
-    #                 userClass['student'][i].delete()
-    #         print(userClass['student'])
-            
-    #     return Response("")    
-    # classModel = ClassModel()
-    # def get(self, request, *args, **kwargs):
-    #     teacher = self.get_object()
+    def get(self, request, *args, **kwargs):
+        userID = request.user.id
+        student_class = ClassModel.objects.get(id=int(self.kwargs['pk']))
+        student = User.objects.get(id= userID)
+        student.lesson_list.remove(student_class)
+        serializedClass = ShowClassesSerializer(student_class)
 
-    #     if self.classModel.has_missed_deadline(self) :
-    #         teacher.delete()
-    #         return Response('Class deleted.', )
-    #     return Response('You miss a deadline.',)
+        return Response(serializedClass.data)
+
+
+class DeleteStudentAPIView(ListAPIView):
+    queryset = ClassModel.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        teacherID = request.user.id
+        student_class = ClassModel.objects.get(id=int(self.kwargs['pk']))
+        try:
+            student = User.objects.get(id= int(self.kwargs['id']))
+        except Exception as e:
+            return Response("This ID doesn't exist.")
+        serializedClass = ShowClassesSerializer(student_class).data
+        for i in range(0, len(serializedClass['student'])):
+            print(len(serializedClass['student']))
+            if student.id == serializedClass['student'][i]['id']:
+                teacher = student_class.teacher.id
+                if teacher == teacherID:
+                    student.lesson_list.remove(student_class)
+                else:
+                    return Response("You can't delete students from this class.")
+
+                serializedClass = ShowClassesSerializer(student_class)
+                return Response(serializedClass.data)
+
+        return Response("This student is not in the class.")
+        
+        
+
+
+
+
+
 
 
