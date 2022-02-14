@@ -8,15 +8,19 @@ from .views import (
     ShowStudentClassesAPIView, 
     DeleteLessonByStudentAPIView, 
     ShowUsersAPIView,
-    DeleteStudentAPIView
+    DeleteStudentAPIView,
+    CreateUserAPIView,
+    CreateClassAPIView
     )
 
 urlpatterns = [
     path('classes/', ShowClassesAPIView.as_view()),
-    path('updateClass/<pk>/', UpdateClassNameAPIView.as_view()),
-    path('deleteLesson/<pk>/', DeleteLessonByStudentAPIView.as_view()),  
-    path('deletestudent/<pk>/<id>/', DeleteStudentAPIView.as_view()), # pk = class ID , id = student ID       
-    path('teacherClasses/', ShowTeacherClassesAPIView.as_view()),     
-    path('studentClasses/', ShowStudentClassesAPIView.as_view()),
+    path('update-class/<pk>/', UpdateClassNameAPIView.as_view()),
+    path('delete-lesson/<pk>/', DeleteLessonByStudentAPIView.as_view()),  
+    path('delete-student/<pk>/<id>/', DeleteStudentAPIView.as_view()), # pk = class ID , id = student ID       
+    path('teacher-class/', ShowTeacherClassesAPIView.as_view()),     
+    path('student-class/', ShowStudentClassesAPIView.as_view()),
     path('users/', ShowUsersAPIView.as_view()),
+    path('create-student/', CreateUserAPIView.as_view()),
+    path('create-class/', CreateClassAPIView.as_view()),
 ]

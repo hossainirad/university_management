@@ -65,11 +65,16 @@ class User(AbstractBaseUser, PermissionsMixin):
             return self.name
         return str(self.mobile)
 
+    def is_teacher(self):
+        if self.access == 3:
+            return True
+        return False
+    
     @property
     def is_staff(self):
         "Is the user a member of staff?"
         # Simplest possible answer: All admins are staff
-        return self.is_admin
+        return self.is_admin    
 
 
 class LessonModel(models.Model):
@@ -104,8 +109,9 @@ class ClassModel(models.Model):
     def has_missed_deadline(self):
         current_datetime = timezone.now()
         if self.created_at + relativedelta(days=14) > current_datetime :
-            return True
-        return False
+            return False
+        return True
+    
     
 
 
