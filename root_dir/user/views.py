@@ -1,14 +1,19 @@
-from django.contrib.auth import get_user_model
+from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth.views import LoginView
 from rest_framework import permissions, serializers
 from rest_framework.generics import (CreateAPIView, DestroyAPIView,
-                                     ListAPIView, UpdateAPIView)
+                                     ListAPIView, RetrieveAPIView,
+                                     UpdateAPIView)
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import ClassModel
 from .permissions import IsStaff, IsTeacher
 from .serializers import (CreateClassSerializer, CreateUserSerializer,
-                          ShowClassesSerializer, ShowStudentClassSerializer,
-                          ShowUserSerializer, UpdateClassesSerializer)
+                          LoginSerializer, ShowClassesSerializer,
+                          ShowStudentClassSerializer, ShowUserSerializer,
+                          UpdateClassesSerializer)
 
 User = get_user_model()
 
@@ -85,6 +90,46 @@ class CreateClassAPIView(CreateAPIView):
     queryset = ClassModel.objects.all()
     serializer_class = CreateClassSerializer
     
+
+class LoginAPIView(APIView):
+    permission_classes = [permissions.AllowAny]
+    serializer_class = LoginSerializer
+    
+    def post(self, request, *args, **kwargs):
+        if not request.data:
+            return Response({'Error': "Please provide username/password"}, status="400")
+        if request.user.is_authenticated:
+            return Response({'detail': 'You are already authenticated.'}, status=400)
+
+        username = request.data['phone_number']
+        password = request.data['password']
+        try:
+            user = User.objects.get(mobile=username)
+        except User.DoesNotExist:
+            raise serializers.ValidationError({
+                "error_ms": "Invalid username/password."
+            })
+        if user.check_password(password):
+            refresh = RefreshToken.for_user(user)
+
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+            })
+        else:
+            return Response({'Error': "Invalid username/password"}, status="400")    
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
