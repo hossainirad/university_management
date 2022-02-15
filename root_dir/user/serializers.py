@@ -1,22 +1,14 @@
 from django.contrib.auth import get_user_model
+from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework import serializers
 
 from .models import ClassModel, User
+
 
 class ShowUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'name']
-
-# class StudentSerializer(serializers.ModelSerializer):
-#      class Meta:
-#         model = User
-#         fields = ['id', 'name']
-
-# class ShowClassesSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = ClassModel
-#         fields = [ 'name', 'teacher', 'student', 'created_at']
 
 
 class ShowClassesSerializer(serializers.ModelSerializer):
@@ -62,5 +54,11 @@ class CreateClassSerializer(serializers.ModelSerializer):
         fields = ['name', 'teacher']
     
     
+class LoginSerializer(serializers.ModelSerializer):
+    phone_number = PhoneNumberField()
+    password = serializers.CharField()
     
+    class Meta:
+        model = User
+        fields = ['phone_number', 'password']
         

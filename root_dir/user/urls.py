@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.urls import include, path
+ 
 
 from .views import ( 
     ShowClassesAPIView, 
@@ -10,7 +11,8 @@ from .views import (
     ShowUsersAPIView,
     DeleteStudentAPIView,
     CreateUserAPIView,
-    CreateClassAPIView
+    CreateClassAPIView,
+    LoginAPIView
     )
 
 urlpatterns = [
@@ -23,4 +25,5 @@ urlpatterns = [
     path('users/', ShowUsersAPIView.as_view()),
     path('create-student/', CreateUserAPIView.as_view()),
     path('create-class/', CreateClassAPIView.as_view()),
+    path('login/', LoginAPIView.as_view()),
 ]
