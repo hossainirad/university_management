@@ -22,6 +22,10 @@ class ShowClassesSerializer(serializers.ModelSerializer):
 
 
 class UpdateClassesSerializer(serializers.ModelSerializer):
+    name = serializers.CharField()
+    teacher = serializers.CharField()
+    student = ShowUserSerializer(read_only=True, many=True)
+
     class Meta:
         model = ClassModel
         fields = '__all__'
@@ -55,10 +59,10 @@ class CreateClassSerializer(serializers.ModelSerializer):
     
     
 class LoginSerializer(serializers.ModelSerializer):
-    phone_number = PhoneNumberField()
+    mobile = PhoneNumberField()
     password = serializers.CharField()
     
     class Meta:
         model = User
-        fields = ['phone_number', 'password']
+        fields = ['mobile', 'password']
         
