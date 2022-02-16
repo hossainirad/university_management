@@ -93,23 +93,19 @@ class LoginAPIView(CreateAPIView):
     serializer_class = LoginSerializer
     
     def post(self, request, *args, **kwargs):   
-        username = request.data.get('phone_number', None)
+        mobile = request.data.get('mobile', None)
         password = request.data.get('password' , None)
 
-        if username:
-            try:
-                user = User.objects.get(mobile=username)
-            except User.DoesNotExist:
-                raise serializers.ValidationError({
-                    "error_ms": "Invalid username/password."
-                })
-            if user.check_password(password):
-                refresh = RefreshToken.for_user(user)
+        if mobile:
+            if User.objects.filter(mobile=mobile).exists():
+                user = User.objects.get(mobile=mobile)
+                if user.check_password(password):
+                    refresh = RefreshToken.for_user(user)
 
-                return Response({
-                    'refresh': str(refresh),
-                    'access': str(refresh.access_token),
-                })
+                    return Response({
+                        'refresh': str(refresh),
+                        'access': str(refresh.access_token),
+                    })
         return Response("Invalid username/password.")
         
         
