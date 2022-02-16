@@ -96,8 +96,7 @@ class LoginAPIView(CreateAPIView):
         mobile = request.data.get('mobile', None)
         password = request.data.get('password' , None)
 
-        if mobile:
-            if User.objects.filter(mobile=mobile).exists():
+        if mobile and User.objects.filter(mobile=mobile).exists():
                 user = User.objects.get(mobile=mobile)
                 if user.check_password(password):
                     refresh = RefreshToken.for_user(user)
