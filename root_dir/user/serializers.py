@@ -22,6 +22,10 @@ class ShowClassesSerializer(serializers.ModelSerializer):
 
 
 class UpdateClassesSerializer(serializers.ModelSerializer):
+    name = serializers.CharField()
+    teacher = serializers.CharField()
+    student = ShowUserSerializer(read_only=True, many=True)
+
     class Meta:
         model = ClassModel
         fields = '__all__'

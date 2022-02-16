@@ -1,11 +1,8 @@
-from django.contrib.auth import authenticate, get_user_model
-from django.contrib.auth.views import LoginView
+from django.contrib.auth import get_user_model
 from rest_framework import permissions, serializers
 from rest_framework.generics import (CreateAPIView, DestroyAPIView,
-                                     ListAPIView, RetrieveAPIView,
-                                     UpdateAPIView)
+                                     ListAPIView, UpdateAPIView)
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import ClassModel
@@ -91,34 +88,31 @@ class CreateClassAPIView(CreateAPIView):
     serializer_class = CreateClassSerializer
     
 
-class LoginAPIView(APIView):
-    permission_classes = [permissions.AllowAny]
+class LoginAPIView(CreateAPIView):
+    permission_classes = []
     serializer_class = LoginSerializer
     
-    def post(self, request, *args, **kwargs):
-        if not request.data:
-            return Response({'Error': "Please provide username/password"}, status="400")
-        if request.user.is_authenticated:
-            return Response({'detail': 'You are already authenticated.'}, status=400)
+    def post(self, request, *args, **kwargs):   
+        username = request.data.get('phone_number', None)
+        password = request.data.get('password' , None)
 
-        username = request.data['phone_number']
-        password = request.data['password']
-        try:
-            user = User.objects.get(mobile=username)
-        except User.DoesNotExist:
-            raise serializers.ValidationError({
-                "error_ms": "Invalid username/password."
-            })
-        if user.check_password(password):
-            refresh = RefreshToken.for_user(user)
+        if username:
+            try:
+                user = User.objects.get(mobile=username)
+            except User.DoesNotExist:
+                raise serializers.ValidationError({
+                    "error_ms": "Invalid username/password."
+                })
+            if user.check_password(password):
+                refresh = RefreshToken.for_user(user)
 
-            return Response({
-                'refresh': str(refresh),
-                'access': str(refresh.access_token),
-            })
-        else:
-            return Response({'Error': "Invalid username/password"}, status="400")    
-
+                return Response({
+                    'refresh': str(refresh),
+                    'access': str(refresh.access_token),
+                })
+        return Response("Invalid username/password.")
+        
+        
 
 
 
