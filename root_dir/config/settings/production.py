@@ -150,8 +150,8 @@ SIMPLE_JWT = {
     'JTI_CLAIM': 'jti',
     
     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
-    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=20),
-    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+    'SLIDING_TOKEN_LIFETIME': timedelta(days=365),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=365),
 }
 
 
@@ -165,15 +165,15 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_THROTTLE_CLASSES': [
-        # 'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.AnonRateThrottle',
         'rest_framework.throttling.ScopedRateThrottle'
     ],
     'DEFAULT_THROTTLE-RATES': {
-        # 'anon': '10/hor',
+        'anon': '10/hourr',
+        'user': '10/hour',
         'refferal': '30/hour',
         'sms-auth': '10/hour',
         'default-values': '500/hour',
         'check-locker-password': '10/hour',
     }
-    
 }

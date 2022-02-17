@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
-from rest_framework import permissions, serializers
+from rest_framework import serializers
+from rest_framework.throttling import UserRateThrottle
 from rest_framework.generics import (CreateAPIView, DestroyAPIView,
                                      ListAPIView, UpdateAPIView)
 from rest_framework.response import Response
@@ -25,6 +26,9 @@ class ShowUsersAPIView(ListAPIView):
 
 
 class ShowTeacherClassesAPIView(ListAPIView):
+    """
+    This view shows teacher's classes if the logged-in user is a teacher.
+    """
     serializer_class = ShowClassesSerializer
 
     def get_queryset(self):
@@ -32,6 +36,9 @@ class ShowTeacherClassesAPIView(ListAPIView):
         return qs
 
 class ShowStudentClassesAPIView(ListAPIView):
+    """
+    This view shows student's classes if the logged-in user is a student.
+    """
     serializer_class = ShowStudentClassSerializer
 
     def get_queryset(self):
@@ -45,6 +52,10 @@ class UpdateClassNameAPIView(UpdateAPIView):
 
 
 class DeleteLessonByStudentAPIView(DestroyAPIView):
+    """
+    This view gets pk that refers to the class id and if the logged-in user is
+     a student of this class, removes the student from class. 
+    """
     queryset = ClassModel.objects.all()
 
     def get(self, request, *args, **kwargs):
@@ -56,6 +67,10 @@ class DeleteLessonByStudentAPIView(DestroyAPIView):
 
 
 class DeleteStudentAPIView(ListAPIView):
+    """
+    This view gets pk and id that refers to the class id and the student id.
+    if the logged-in user is a teacher of this class, removes the student from class. 
+    """
     queryset = ClassModel.objects.all()
     serializer_class = ShowClassesSerializer
 
@@ -75,6 +90,9 @@ class DeleteStudentAPIView(ListAPIView):
 
 
 class CreateUserAPIView(CreateAPIView):
+    """
+    This view generate users. the logged-in user should be a stafff, so in permission_classes checks user's access.
+    """
     permission_classes = [IsStaff, ]
     
     queryset = ClassModel.objects.all()
@@ -86,10 +104,20 @@ class CreateClassAPIView(CreateAPIView):
     
     queryset = ClassModel.objects.all()
     serializer_class = CreateClassSerializer
-    
+
+
+class UserThrottle(UserRateThrottle):
+    rate= '10/hour'
+
 
 class LoginAPIView(CreateAPIView):
+    """
+    This view gives token for login service. if a user enter correct phone number 
+    and password, this view returns access token and refresh token for login.
+    by using UserThrottle class, user can only make 10 requests per hour to API.
+    """
     permission_classes = []
+    throttle_classes = [UserThrottle]
     serializer_class = LoginSerializer
     
     def post(self, request, *args, **kwargs):   
@@ -106,26 +134,6 @@ class LoginAPIView(CreateAPIView):
                         'access': str(refresh.access_token),
                     })
         return Response("Invalid username/password.")
-        
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
